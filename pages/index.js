@@ -1,9 +1,7 @@
 import Head from "next/head";
-import { Inter } from "@next/font/google";
-import styles from "@/styles/Home.module.css";
 import Banner from "@/components/Banner";
 
-const inter = Inter({ subsets: ["latin"] });
+import styles from "@/styles/Home.module.css";
 
 export default function Home() {
   const onClick = () => console.log("hi banner button");
