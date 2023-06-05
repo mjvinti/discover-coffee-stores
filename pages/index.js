@@ -4,6 +4,8 @@ import Image from "next/image";
 import Banner from "@/components/Banner";
 import Card from "@/components/Card";
 
+import coffeStores from "@/data/coffee-stores.json";
+
 import styles from "@/styles/Home.module.css";
 
 export default function Home() {
@@ -26,18 +28,15 @@ export default function Home() {
           />
         </div>
         <div className={styles.cardLayout}>
-          <Card
-            className={styles.card}
-            href="/coffee-store/darkhorse-coffee"
-            imgUrl="/static/hero-image.png"
-            name="DarkHorse Cofee"
-          />
-          <Card
-            className={styles.card}
-            href="/coffee-store/darkhorse-coffee"
-            imgUrl="/static/hero-image.png"
-            name="DarkHorse Cofee"
-          />
+          {coffeStores.map((store) => (
+            <Card
+              className={styles.card}
+              href={`/coffee-store/${store.id}`}
+              imgUrl={store.imgUrl}
+              key={store.id}
+              name={store.name}
+            />
+          ))}
         </div>
       </main>
     </div>
