@@ -8,7 +8,11 @@ import coffeStores from "@/data/coffee-stores.json";
 
 import styles from "@/styles/Home.module.css";
 
-export default function Home() {
+export async function getStaticProps(context) {
+  return { props: { coffeStores } };
+}
+
+export default function Home({ coffeStores }) {
   const onClick = () => console.log("hi banner button");
 
   return (
