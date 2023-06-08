@@ -4,12 +4,12 @@ import Image from "next/image";
 import Banner from "@/components/Banner";
 import Card from "@/components/Card";
 
-import coffeStores from "@/data/coffee-stores.json";
+import coffeStoresData from "@/data/coffee-stores.json";
 
 import styles from "@/styles/Home.module.css";
 
 export async function getStaticProps(context) {
-  return { props: { coffeStores } };
+  return { props: { coffeStores: coffeStoresData } };
 }
 
 export default function Home({ coffeStores }) {
@@ -31,17 +31,22 @@ export default function Home({ coffeStores }) {
             width={700}
           />
         </div>
-        <div className={styles.cardLayout}>
-          {coffeStores.map((store) => (
-            <Card
-              className={styles.card}
-              href={`/coffee-store/${store.id}`}
-              imgUrl={store.imgUrl}
-              key={store.id}
-              name={store.name}
-            />
-          ))}
-        </div>
+        {coffeStores.length && (
+          <>
+            <h2 className={styles.heading2}>Toronto Stores</h2>
+            <div className={styles.cardLayout}>
+              {coffeStores.map((store) => (
+                <Card
+                  className={styles.card}
+                  href={`/coffee-store/${store.id}`}
+                  imgUrl={store.imgUrl}
+                  key={store.id}
+                  name={store.name}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
