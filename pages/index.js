@@ -4,26 +4,16 @@ import Image from "next/image";
 import Banner from "@/components/Banner";
 import Card from "@/components/Card";
 
+import { fetchCoffeeStores } from "@/lib/coffee-stores";
+
 import styles from "@/styles/Home.module.css";
 
 export async function getStaticProps(context) {
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${process.env.API_KEY}`,
-    },
-  };
-
-  const response = await fetch(
-    "https://api.yelp.com/v3/businesses/search?location=Buffalo%2C%20NY&term=coffee&sort_by=best_match&limit=6",
-    options
-  );
-  const data = await response.json();
-  return { props: { coffeStores: data.businesses } };
+  const coffeeStores = await fetchCoffeeStores();
+  return { props: { coffeeStores } };
 }
 
-export default function Home({ coffeStores }) {
+export default function Home({ coffeeStores }) {
   const onClick = () => console.log("hi banner button");
 
   return (
@@ -42,11 +32,11 @@ export default function Home({ coffeStores }) {
             width={700}
           />
         </div>
-        {coffeStores.length && (
+        {coffeeStores.length && (
           <>
             <h2 className={styles.heading2}>Buffalo Stores</h2>
             <div className={styles.cardLayout}>
-              {coffeStores.map((store) => (
+              {coffeeStores.map((store) => (
                 <Card
                   className={styles.card}
                   href={`/coffee-store/${store.id}`}
