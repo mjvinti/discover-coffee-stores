@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import cls from "classnames";
 
-import { fetchCoffeeStores } from "@/lib/coffee-stores";
+import { fetchCoffeeStores } from "@/lib/coffeeStores";
 
 import styles from "@/styles/CoffeeStore.module.css";
 
