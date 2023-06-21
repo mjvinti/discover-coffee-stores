@@ -7,7 +7,7 @@ import Card from "@/components/Card";
 
 import { fetchCoffeeStores } from "@/lib/coffeeStores";
 import useTrackLocation from "@/hooks/useTrackLocation";
-import { ACTION_TYPES, StoreContext } from "./_app";
+import { ACTION_TYPES, StoreContext } from "@/store/storeContext";
 
 import styles from "@/styles/Home.module.css";
 

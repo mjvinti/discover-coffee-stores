@@ -7,7 +7,7 @@ import cls from "classnames";
 
 import { isEmpty } from "@/utils";
 import { fetchCoffeeStores } from "@/lib/coffeeStores";
-import { StoreContext } from "../_app";
+import { StoreContext } from "@/store/storeContext";
 
 import styles from "@/styles/CoffeeStore.module.css";
 
