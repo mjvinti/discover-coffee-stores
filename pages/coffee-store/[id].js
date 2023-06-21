@@ -1,18 +1,24 @@
+import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import cls from "classnames";
 
+import { isEmpty } from "@/utils";
 import { fetchCoffeeStores } from "@/lib/coffeeStores";
+import { StoreContext } from "../_app";
 
 import styles from "@/styles/CoffeeStore.module.css";
 
 export async function getStaticProps({ params }) {
   const coffeeStores = await fetchCoffeeStores();
+  const findCoffeeStoreById = coffeeStores.find(
+    (store) => store.id === params.id
+  );
   return {
     props: {
-      coffeeStore: coffeeStores.find((store) => store.id === params.id),
+      coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {},
     },
   };
 }
@@ -28,20 +34,42 @@ export async function getStaticPaths() {
   };
 }
 
-const CoffeeStore = ({
-  coffeeStore: {
-    image_url,
-    location: { city, display_address },
-    name,
-    rating,
-  },
-}) => {
-  const { isFallback } = useRouter();
+const CoffeeStore = (props) => {
+  const {
+    isFallback,
+    query: { id },
+  } = useRouter();
+  const {
+    state: { coffeeStores },
+  } = useContext(StoreContext);
+
+  const [coffeeStore, setCoffeeStore] = useState(props.coffeeStore);
+
+  useEffect(() => {
+    if (isEmpty(props.coffeeStore)) {
+      if (coffeeStores.length) {
+        const findCoffeeStoreById = coffeeStores.find(
+          (store) => store.id === id
+        );
+        setCoffeeStore(findCoffeeStoreById);
+      }
+    }
+  }, [coffeeStores, props.coffeeStore, id]);
 
   if (isFallback) {
     return <div>Loading...</div>;
   }
 
+  if (!coffeeStore || isEmpty(coffeeStore)) {
+    return null;
+  }
+
+  const {
+    image_url,
+    location: { city, display_address },
+    name,
+    rating,
+  } = coffeeStore;
   const address = display_address.join(", ");
   const handleUpvoteButton = () => console.log("upvote handler");
 
@@ -62,7 +90,10 @@ const CoffeeStore = ({
             alt={"name"}
             className={styles.storeImg}
             height={360}
-            src={image_url}
+            src={
+              image_url ||
+              "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
+            }
             width={600}
           />
         </div>

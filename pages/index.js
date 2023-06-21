@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 
@@ -7,30 +7,36 @@ import Card from "@/components/Card";
 
 import { fetchCoffeeStores } from "@/lib/coffeeStores";
 import useTrackLocation from "@/hooks/useTrackLocation";
+import { ACTION_TYPES, StoreContext } from "./_app";
 
 import styles from "@/styles/Home.module.css";
 
 export async function getStaticProps(context) {
-  const coffeeStores = await fetchCoffeeStores();
-  return { props: { coffeeStores } };
+  const defaultCoffeeStores = await fetchCoffeeStores();
+  return { props: { defaultCoffeeStores } };
 }
 
-export default function Home({ coffeeStores }) {
+export default function Home({ defaultCoffeeStores }) {
   const [errorMsg, setErrorMsg] = useState(null);
-  const [fetchedCoffeeStores, setFetchedCoffeeStores] = useState([]);
-  const { handleTrackLocation, latLong, locationErrorMsg, isFindingLocation } =
+  const {
+    dispatch,
+    state: { coffeeStores, latitude, longitude },
+  } = useContext(StoreContext);
+  const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
     useTrackLocation();
 
   useEffect(() => {
     async function setCoffeeStoresByLocation() {
-      if (latLong) {
-        const { latitude, longitude } = latLong;
+      if (latitude && longitude) {
         try {
           const response = await fetch(
             `/api/coffeeStores?latitude=${latitude}&longitude=${longitude}`
           );
           const { fetchedCoffeeStores } = await response.json();
-          setFetchedCoffeeStores(fetchedCoffeeStores);
+          dispatch({
+            type: ACTION_TYPES.SET_COFFEE_STORES,
+            payload: { coffeeStores: fetchedCoffeeStores },
+          });
         } catch (err) {
           console.log(err);
           setErrorMsg(err.message);
@@ -38,7 +44,7 @@ export default function Home({ coffeeStores }) {
       }
     }
     setCoffeeStoresByLocation();
-  }, [latLong]);
+  }, [dispatch, latitude, longitude]);
 
   const onClick = () => handleTrackLocation();
 
@@ -63,11 +69,11 @@ export default function Home({ coffeeStores }) {
             width={700}
           />
         </div>
-        {fetchedCoffeeStores.length > 0 && (
+        {coffeeStores.length > 0 && (
           <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Stores Near Me</h2>
             <div className={styles.cardLayout}>
-              {fetchedCoffeeStores.map((store) => (
+              {coffeeStores.map((store) => (
                 <Card
                   className={styles.card}
                   href={`/coffee-store/${store.id}`}
@@ -79,11 +85,11 @@ export default function Home({ coffeeStores }) {
             </div>
           </div>
         )}
-        {coffeeStores.length > 0 && (
+        {defaultCoffeeStores.length > 0 && (
           <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Buffalo Stores</h2>
             <div className={styles.cardLayout}>
-              {coffeeStores.map((store) => (
+              {defaultCoffeeStores.map((store) => (
                 <Card
                   className={styles.card}
                   href={`/coffee-store/${store.id}`}
