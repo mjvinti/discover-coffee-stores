@@ -30,7 +30,7 @@ export default function Home({ defaultCoffeeStores }) {
       if (latitude && longitude) {
         try {
           const response = await fetch(
-            `/api/coffeeStores?latitude=${latitude}&longitude=${longitude}`
+            `/api/coffee/stores?latitude=${latitude}&longitude=${longitude}`
           );
           const { fetchedCoffeeStores } = await response.json();
           dispatch({
