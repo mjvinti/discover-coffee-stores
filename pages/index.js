@@ -30,13 +30,14 @@ export default function Home({ defaultCoffeeStores }) {
       if (latitude && longitude) {
         try {
           const response = await fetch(
-            `/api/coffee/stores?latitude=${latitude}&longitude=${longitude}`
+            `/api/coffee/stores?latitude=${latitude}&longitude=${longitude}&limit=${30}`
           );
           const { fetchedCoffeeStores } = await response.json();
           dispatch({
             type: ACTION_TYPES.SET_COFFEE_STORES,
             payload: { coffeeStores: fetchedCoffeeStores },
           });
+          setErrorMsg(null);
         } catch (err) {
           console.log(err);
           setErrorMsg(err.message);
