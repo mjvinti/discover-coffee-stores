@@ -2,24 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import cls from "classnames";
 
-import { isEmpty } from "@/utils";
-import { fetchCoffeeStores } from "@/lib/coffeeStores";
-import { StoreContext } from "@/store/storeContext";
+import { fetchCoffeeStores, fetchCoffeeStoreById } from "@/lib/coffeeStores";
 
 import styles from "@/styles/CoffeeStore.module.css";
 
-export async function getStaticProps({ params }) {
-  const coffeeStores = await fetchCoffeeStores();
-  const findCoffeeStoreById = coffeeStores.find(
-    (store) => store.id === params.id
-  );
+export async function getStaticProps({ params: { id } }) {
+  const coffeeStore = await fetchCoffeeStoreById(id);
   return {
-    props: {
-      coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {},
-    },
+    props: { coffeeStore },
   };
 }
 
@@ -34,33 +26,8 @@ export async function getStaticPaths() {
   };
 }
 
-const CoffeeStore = (props) => {
-  const {
-    isFallback,
-    query: { id },
-  } = useRouter();
-  const {
-    state: { coffeeStores },
-  } = useContext(StoreContext);
-
-  const [coffeeStore, setCoffeeStore] = useState(props.coffeeStore);
-
-  useEffect(() => {
-    if (isEmpty(props.coffeeStore)) {
-      if (coffeeStores.length) {
-        const findCoffeeStoreById = coffeeStores.find(
-          (store) => store.id === id
-        );
-        setCoffeeStore(findCoffeeStoreById);
-      }
-    }
-  }, [coffeeStores, props.coffeeStore, id]);
-
-  if (isFallback) {
-    return <div>Loading...</div>;
-  }
-
-  if (!coffeeStore || isEmpty(coffeeStore)) {
+const CoffeeStore = ({ coffeeStore }) => {
+  if (!coffeeStore) {
     return null;
   }
 
