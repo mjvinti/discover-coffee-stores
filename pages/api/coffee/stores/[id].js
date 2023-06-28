@@ -5,9 +5,15 @@ const handler = async (req, res) => {
     query: { id },
   } = req;
 
+  if (!id) {
+    return res
+      .status(400)
+      .json({ message: "You must provide the following: id" });
+  }
+
   try {
-    const business = await fetchCoffeeStoreById(id);
-    return res.status(200).json({ fetchedCoffeeStore: business });
+    const fetchedCoffeeStore = await fetchCoffeeStoreById(id);
+    return res.status(200).json({ fetchedCoffeeStore });
   } catch (err) {
     console.error("There is an error", err);
     return res
