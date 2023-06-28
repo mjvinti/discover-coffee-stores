@@ -12,8 +12,8 @@ const handler = async (req, res) => {
   }
 
   try {
-    const fetchedCoffeeStore = await fetchCoffeeStoreById(id);
-    return res.status(200).json({ fetchedCoffeeStore });
+    const coffeeStore = await fetchCoffeeStoreById(id);
+    return res.status(200).json({ coffeeStore });
   } catch (err) {
     console.error("There is an error", err);
     return res

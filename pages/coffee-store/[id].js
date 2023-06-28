@@ -1,42 +1,46 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import cls from "classnames";
+import useSWR from "swr";
 
-import { fetchCoffeeStores, fetchCoffeeStoreById } from "@/lib/coffeeStores";
+import { fetcher } from "@/utils";
 
 import styles from "@/styles/CoffeeStore.module.css";
 
-export async function getStaticProps({ params: { id } }) {
-  const coffeeStore = await fetchCoffeeStoreById(id);
-  return {
-    props: { coffeeStore },
-  };
-}
+const CoffeeStore = () => {
+  const {
+    query: { id },
+  } = useRouter();
+  const { data, error, isLoading } = useSWR(
+    `/api/coffee/stores/${id}`,
+    fetcher
+  );
 
-export async function getStaticPaths() {
-  const coffeeStores = await fetchCoffeeStores();
-  const paths = coffeeStores.map((store) => ({
-    params: { id: store.id },
-  }));
-  return {
-    paths,
-    fallback: true,
-  };
-}
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-const CoffeeStore = ({ coffeeStore }) => {
-  if (!coffeeStore) {
+  if (error) {
+    return <div>Something went wrong!</div>;
+  }
+
+  if (!data) {
     return null;
   }
 
   const {
-    image_url,
-    location: { city, display_address },
-    name,
-    rating,
-  } = coffeeStore;
+    coffeeStore: {
+      image_url,
+      location: { city, display_address },
+      name,
+      rating,
+    },
+  } = data;
+
   const address = display_address.join(", ");
+
   const handleUpvoteButton = () => console.log("upvote handler");
 
   return (
