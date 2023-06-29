@@ -41,8 +41,6 @@ const CoffeeStore = () => {
 
   const address = display_address.join(", ");
 
-  const handleUpvoteButton = () => console.log("upvote handler");
-
   return (
     <div className={styles.layout}>
       <Head>
@@ -95,9 +93,6 @@ const CoffeeStore = () => {
             />
             <p className={styles.text}>{rating}</p>
           </div>
-          <button className={styles.upvoteButton} onClick={handleUpvoteButton}>
-            Up Vote
-          </button>
         </div>
       </div>
     </div>

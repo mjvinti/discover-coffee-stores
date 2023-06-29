@@ -58,6 +58,8 @@ export default function Home({ defaultCoffeeStores }) {
         <Banner
           buttonText={isFindingLocation ? "Locating..." : "View stores nearby"}
           handleOnClick={onClick}
+          hasCoffeeStores={!!coffeeStores.length}
+          isFindingLocation={isFindingLocation}
         />
         {locationErrorMsg && <p>Something went wrong: {locationErrorMsg}</p>}
         {errorMsg && <p>Something went wrong: {errorMsg}</p>}
