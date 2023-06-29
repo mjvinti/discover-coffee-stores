@@ -39,7 +39,6 @@ export default function Home({ defaultCoffeeStores }) {
           });
           setErrorMsg(null);
         } catch (err) {
-          console.log(err);
           setErrorMsg(err.message);
         }
       }
