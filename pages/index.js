@@ -53,6 +53,10 @@ export default function Home({ defaultCoffeeStores }) {
       <Head>
         <title>Coffee Connoisseur</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="description"
+          content="allows you to discover coffee stores"
+        />
       </Head>
       <main className={styles.main}>
         <Banner
