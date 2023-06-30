@@ -55,7 +55,7 @@ const CoffeeStore = () => {
             <h1 className={styles.name}>{name}</h1>
           </div>
           <Image
-            alt={"name"}
+            alt={name}
             className={styles.storeImg}
             height={360}
             src={
